@@ -1,0 +1,6 @@
+<h1> Hi <%= current_user.email %> Choose your friend in the list to transfer </h1>
+
+ <%= form_tag(transfer_path, :method => "get", id: "search-form") do %>
+  <%= text_field_tag :search, params[:search], class: "phmargin", size: "23", placeholder: "email address" %>
+    <%= submit_tag "Search" %>
+            <% end %>

@@ -4,4 +4,7 @@ Rails.application.routes.draw do
 root 'accounts#index'
 
 resources :accounts
+
+get '/p2p' => "accounts#p2p"
+get '/transfer' => "accounts#transfer"
 end

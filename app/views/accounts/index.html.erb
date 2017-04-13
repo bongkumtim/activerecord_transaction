@@ -1,8 +1,27 @@
-<h1>Hi <%=current_user.email%> </h1>
+<% if user_signed_in? %>
+<h1>Welcome to Beta Wallet <%= current_user.email %> </h1>
 
-<% @users.each do |u| %>
-<h2><%= link_to u.email, accounts_path(u) %></h2>
-<% end %>
+<%= link_to "Sign Out", destroy_user_session_path, method: :delete %>  
+ 	<%= link_to 'Edit Registration', edit_user_registration_path %>
+ 		<%= link_to 'e-wallet', new_account_path %>
+ 			<%= link_to 'P2P transfer', p2p_path %>
+ 	<%else%>
+  		<%= link_to 'Sign In', new_user_session_path %>  
+   			<%= link_to 'Register', new_user_registration_path %>
+   			<%end%>
 
-<%= link_to "Sign Out", destroy_user_session_path, method: :delete %>
- <%= link_to 'Edit registration', edit_user_registration_path %>
+ <table class="table table-striped">
+            <h3>Ringgit Statement</h3>
+
+              <tbody>
+              <% running_total = 0 %>
+              <% @account.each do |x| %>
+                <tr>
+                  <td><%= x.created_at %></td>
+                  <td><%= number_to_currency(x.amount) %></td>
+                  <% running_total = running_total + (x.amount) %>
+                  <% end %>
+                  <td><%= number_to_currency(running_total) %></td>
+                </tr>
+              </tbody>
+            </table>
