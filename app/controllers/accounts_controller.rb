@@ -41,25 +41,24 @@ class AccountsController < ApplicationController
 	end
 
 	def transfer
-		@account_a = Account.where(user_id: current_user.id)
+		@account_a = Account.find_by_user_id(current_user.id)
 
 		@users = User.all
 		if params[:search]
     	@users = User.search(params[:search])
     	y = @users.first
-    	@account_b = Account.where(user_id: y.id)
-
+    	@account_b = Account.find_by_user_id(y.id)
+    	
+    	
     	ActiveRecord::Base.transaction do
-		@account_a.sum(:amount) - 100
-		@account_a.save!
-		@account_b.sum(:amount) + 100
-		@account_b.save!
-			
-  			raise "Transaction Failed" unless @account_a.save && @account_b.save
-			end
+
+		@account_a.update!(amount: - 100)
+		@account_b.update!(amount: + 100)
+		end
 	end
 	redirect_to root_path
 	end
+
 	private
 
 	def search
