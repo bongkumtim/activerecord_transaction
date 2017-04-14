@@ -42,21 +42,27 @@ class AccountsController < ApplicationController
 
 	def transfer
 		@account_a = Account.find_by_user_id(current_user.id)
-
+		@user = Account.where(user_id: current_user.id)
 		@users = User.all
 		if params[:search]
     	@users = User.search(params[:search])
     	y = @users.first
     	@account_b = Account.find_by_user_id(y.id)
     	
-    	
+    	if @user.sum(:amount)-100 > 0
     	ActiveRecord::Base.transaction do
-
-		@account_a.update!(amount: - 100)
-		@account_b.update!(amount: + 100)
+    	@account_a.lock!
+    	@account_b.lock!
+		@account_a.amount -= 100
+		@account_a.save!
+		@account_b.amount += 100
+		@account_b.save!
 		end
+
+		flash[:warning] = 'Your account not enough money to do the transfer!'
+		redirect_to root_path
 	end
-	redirect_to root_path
+	end
 	end
 
 	private
