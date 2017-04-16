@@ -40,6 +40,21 @@ class AccountsController < ApplicationController
 		
 	end
 
+	def exchange
+		
+	
+	end
+
+	def currency
+		@exchange_user = Account.where(user_id: current_user.id)
+		@exchange = @exchange_user.sum(:amount) * 4
+		@exchange_custom = 100
+		@exchange_user_custom = @exchange_custom * 4
+		
+		
+	end
+
+
 	def transfer
 		@account_a = Account.find_by_user_id(current_user.id)
 		@user = Account.where(user_id: current_user.id)
